@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).name("auth.instances").build());
 
         mRecyclerView = (RecyclerView) findViewById(R.id.auth_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
