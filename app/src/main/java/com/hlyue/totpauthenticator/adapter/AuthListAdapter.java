@@ -39,7 +39,7 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
     public void onBindViewHolder(AuthItemVH holder, int position) {
         AuthInstance authInstance = mAuthInstances.get(position);
         holder.issuer.setText(authInstance.getIssuer());
-        holder.timer.setText(String.valueOf(AuthUtils.calculateTOTP(authInstance)));
+        holder.timer.setText(String.format("%06d", AuthUtils.calculateTOTP(authInstance)));
         holder.path.setText(authInstance.getPath());
     }
 

@@ -1,5 +1,6 @@
 package com.hlyue.totpauthenticator;
 
+import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private final Handler mHandler = new Handler();
     private AuthListAdapter mAdapter;
+    private Runnable mRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter = new AuthListAdapter());
 
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
-        mHandler.postDelayed(new Runnable() {
+        mHandler.postDelayed(mRunnable = new Runnable() {
             int previewsProgress = 0;
             @Override
             public void run() {
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Realm.getDefaultInstance().removeAllChangeListeners();
+        mHandler.removeCallbacks(mRunnable);
     }
 
     @Override
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 AuthUtils.newInstance(uri);
+                new BackupManager(this).dataChanged();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "2 factor auth parse failed", Toast.LENGTH_LONG).show();
