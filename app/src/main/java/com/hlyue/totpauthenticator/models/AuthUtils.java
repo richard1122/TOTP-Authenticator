@@ -1,21 +1,13 @@
 package com.hlyue.totpauthenticator.models;
 
-import android.util.Log;
-
 import com.google.common.base.Splitter;
-import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Map;
 
 import javax.crypto.Mac;
@@ -27,6 +19,8 @@ import io.realm.Realm;
  * Created by v-linyhe on 9/6/2015.
  */
 public class AuthUtils {
+    private static final String HMAC_ALGO = "HmacSHA1";
+
     public static String buildPrimaryKey(AuthInstance instance) {
         return instance.getIssuer() + "/" + instance.getPath();
     }
@@ -48,7 +42,6 @@ public class AuthUtils {
         return System.currentTimeMillis() % (30 * 1000);
     }
 
-    private static final String HMAC_ALGO = "HmacSHA1";
     public static int calculateTOTP(AuthInstance instance) {
         byte[] secretBytes = BaseEncoding.base32().decode(instance.getSecret().toUpperCase());
         long time = (System.currentTimeMillis() / 1000 / 30);

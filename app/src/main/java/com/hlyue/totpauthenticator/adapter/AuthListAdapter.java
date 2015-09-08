@@ -1,10 +1,13 @@
 package com.hlyue.totpauthenticator.adapter;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hlyue.totpauthenticator.R;
 import com.hlyue.totpauthenticator.models.AuthInstance;
@@ -36,11 +39,19 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
     }
 
     @Override
-    public void onBindViewHolder(AuthItemVH holder, int position) {
+    public void onBindViewHolder(final AuthItemVH holder, int position) {
         AuthInstance authInstance = mAuthInstances.get(position);
         holder.issuer.setText(authInstance.getIssuer());
         holder.timer.setText(String.format("%06d", AuthUtils.calculateTOTP(authInstance)));
         holder.path.setText(authInstance.getPath());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager manager = (ClipboardManager) v.getContext().getSystemService(v.getContext().CLIPBOARD_SERVICE);
+                manager.setPrimaryClip(ClipData.newPlainText("totp", holder.timer.getText()));
+                Toast.makeText(v.getContext(), "two factor authentication code copied", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

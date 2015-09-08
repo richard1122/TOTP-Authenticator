@@ -1,13 +1,5 @@
 package com.hlyue.totpauthenticator.models;
 
-import android.util.Log;
-
-import com.google.common.hash.Hashing;
-import com.google.common.io.BaseEncoding;
-
-import java.math.BigInteger;
-import java.util.Arrays;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -15,7 +7,9 @@ import io.realm.annotations.PrimaryKey;
  * Created by v-linyhe on 9/6/2015.
  */
 public class AuthInstance extends RealmObject {
-    private @PrimaryKey String primaryKey;
+    private
+    @PrimaryKey
+    String primaryKey;
     private String path, issuer, secret;
 
     public static AuthInstance getInstance(String path, String issuer, String secret) {
