@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 AuthUtils.newInstance(uri);
                 new BackupManager(this).dataChanged();
-            } catch (URISyntaxException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "2 factor auth parse failed", Toast.LENGTH_LONG).show();
             }

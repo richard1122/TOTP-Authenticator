@@ -54,7 +54,7 @@ public class AuthUtils {
             int offset = hash[hash.length - 1] & 0xf;
             int truncatedHash = ByteBuffer.wrap(hash, offset, 4).order(ByteOrder.BIG_ENDIAN).getInt();
             truncatedHash &= 0x7fff_ffff;
-            return (int) (truncatedHash % 1000000);
+            return truncatedHash % 1000000;
 
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
