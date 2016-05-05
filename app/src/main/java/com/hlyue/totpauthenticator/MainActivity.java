@@ -2,7 +2,10 @@ package com.hlyue.totpauthenticator;
 
 import android.app.backup.BackupManager;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +16,10 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
 import com.hlyue.totpauthenticator.adapter.AuthListAdapter;
 import com.hlyue.totpauthenticator.models.AuthUtils;
 import com.hlyue.totpauthenticator.zxing.IntentIntegrator;
@@ -24,14 +31,16 @@ import java.net.URISyntaxException;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private final static String TAG = MainActivity.class.getName();
+    private final static int RESOLVE_CONNECTION_REQUEST_CODE = 0x1;
 
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
     private final Handler mHandler = new Handler();
     private AuthListAdapter mAdapter;
     private Runnable mRunnable;
+    private GoogleApiClient mApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
                 mHandler.postDelayed(this, 250);
             }
         }, 250);
+        mApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_FILE)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -64,6 +79,25 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Realm.getDefaultInstance().removeAllChangeListeners();
         mHandler.removeCallbacks(mRunnable);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(this, RESOLVE_CONNECTION_REQUEST_CODE);
+            } catch (IntentSender.SendIntentException e) {
+                // Unable to resolve, message user appropriately
+            }
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
+        }
     }
 
     @Override
@@ -75,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 URI uri = new URI(intentResult.getContents());
                 if (!uri.getScheme().equalsIgnoreCase("otpauth")) {
-                    Toast.makeText(this, "not a vaild 2 factor auth register barcode", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Not a vaild 2 factor auth register barcode", Toast.LENGTH_LONG).show();
                     return;
                 }
                 AuthUtils.newInstance(uri);
@@ -84,6 +118,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Toast.makeText(this, "2 factor auth parse failed", Toast.LENGTH_LONG).show();
             }
+        }
+        switch (requestCode) {
+            case RESOLVE_CONNECTION_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    mApiClient.connect();
+                }
+                break;
         }
     }
 
@@ -109,5 +150,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "GAPI onconnected");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "GAPI onConnectionSuspended");
     }
 }
