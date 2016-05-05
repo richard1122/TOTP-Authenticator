@@ -24,6 +24,16 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
     RealmResults<AuthInstance> mAuthInstances;
 
     public AuthListAdapter() {
+        init();
+        Realm.getDefaultInstance().addChangeListener(new RealmChangeListener<Realm>() {
+            @Override
+            public void onChange(Realm element) {
+                init();
+            }
+        });
+    }
+
+    private void init() {
         Realm.getDefaultInstance().where(AuthInstance.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<AuthInstance>>() {
             @Override
             public void onChange(RealmResults<AuthInstance> element) {

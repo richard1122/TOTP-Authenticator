@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (intentResult != null) {
+        if (intentResult != null && intentResult.getContents() != null) {
             Log.d(TAG, intentResult.getContents());
             try {
                 URI uri = new URI(intentResult.getContents());
