@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TOTPAuthenticator.iml" filepath="$PROJECT_DIR$/TOTPAuthenticator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TOTP-Authenticator.iml" filepath="$PROJECT_DIR$/TOTP-Authenticator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/totpauthenticator.iml" filepath="$PROJECT_DIR$/totpauthenticator.iml" />
     </modules>
   </component>
 </project>

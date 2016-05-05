@@ -2,14 +2,15 @@ package com.hlyue.totpauthenticator.models;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by v-linyhe on 9/6/2015.
  */
 public class AuthInstance extends RealmObject {
-    private
-    @PrimaryKey
-    String primaryKey;
+    @PrimaryKey @Required
+    private String primaryKey;
+    @Required
     private String path, issuer, secret;
 
     public static AuthInstance getInstance(String path, String issuer, String secret) {
