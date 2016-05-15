@@ -1,33 +1,30 @@
 package com.hlyue.totpauthenticator.models;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+import android.support.annotation.NonNull;
 
-/**
- * Created by v-linyhe on 9/6/2015.
- */
-public class AuthInstance extends RealmObject {
-    @PrimaryKey @Required
-    private String primaryKey;
-    @Required
+import com.google.common.base.Charsets;
+import com.google.common.io.BaseEncoding;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+
+public class AuthInstance {
     private String path, issuer, secret;
 
-    public static AuthInstance getInstance(String path, String issuer, String secret) {
+    public static AuthInstance getInstance(@NonNull String path,@NonNull String issuer,@NonNull String secret) {
         AuthInstance authInstance = new AuthInstance();
         authInstance.setPath(path);
         authInstance.setIssuer(issuer);
         authInstance.setSecret(secret);
-        authInstance.setPrimaryKey(AuthUtils.buildPrimaryKey(authInstance));
         return authInstance;
     }
 
-    public String getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(String primaryKey) {
-        this.primaryKey = primaryKey;
+    public static AuthInstance getInstance(@NonNull final String string) {
+        String[] split = string.split("_");
+        String path = new String(BaseEncoding.base64().decode(split[0]), StandardCharsets.UTF_8);
+        String issuer = new String(BaseEncoding.base64().decode(split[1]), StandardCharsets.UTF_8);
+        String secret = new String(BaseEncoding.base64().decode(split[2]), StandardCharsets.UTF_8);
+        return getInstance(path, issuer, secret);
     }
 
     public String getPath() {
@@ -52,5 +49,10 @@ public class AuthInstance extends RealmObject {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public String encodeToString() {
+        return String.format(Locale.US, "%s_%s_%s", BaseEncoding.base64().encode(path.getBytes(Charsets.UTF_8)),
+                BaseEncoding.base64().encode(issuer.getBytes(Charsets.UTF_8)), BaseEncoding.base64().encode(secret.getBytes(Charsets.UTF_8)));
     }
 }

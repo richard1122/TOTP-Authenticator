@@ -2,6 +2,7 @@ package com.hlyue.totpauthenticator.models;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.BaseEncoding;
+import com.hlyue.totpauthenticator.MyApplication;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -13,29 +14,16 @@ import java.util.Map;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import io.realm.Realm;
-
-/**
- * Created by v-linyhe on 9/6/2015.
- */
 public class AuthUtils {
     private static final String HMAC_ALGO = "HmacSHA1";
-
-    public static String buildPrimaryKey(AuthInstance instance) {
-        return instance.getIssuer() + "/" + instance.getPath();
-    }
 
     public static void newInstance(URI url) {
         String path = url.getPath();
         Map<String, String> query = parseQuery(url.getQuery());
         String issuer = query.get("issuer");
         String secret = query.get("secret");
-
         AuthInstance authInstance = AuthInstance.getInstance(path, issuer, secret);
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(authInstance);
-        realm.commitTransaction();
+        MyApplication.getTotpPreference().edit().putBoolean(authInstance.encodeToString(), true).apply();
     }
 
     public static long getPendingMS() {
