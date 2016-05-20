@@ -13,17 +13,17 @@
         android:id="@+id/auth_item_issuer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+        android:textAppearance="@android:style/TextAppearance.Material.Caption" />
 
     <TextView
         android:id="@+id/auth_item_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        android:textAppearance="@android:style/TextAppearance.Material.Headline" />
 
     <TextView
         android:id="@+id/auth_item_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 </LinearLayout>

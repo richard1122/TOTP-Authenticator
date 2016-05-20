@@ -1,5 +1,6 @@
 package com.hlyue.totpauthenticator;
 
+import android.app.Activity;
 import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +24,6 @@ import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getName();
-    private final static int RESOLVE_CONNECTION_REQUEST_CODE = 0x1;
     private final Handler mHandler = new Handler();
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
