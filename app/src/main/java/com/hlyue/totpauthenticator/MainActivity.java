@@ -1,6 +1,5 @@
 package com.hlyue.totpauthenticator;
 
-import android.app.Activity;
 import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.os.Bundle;
