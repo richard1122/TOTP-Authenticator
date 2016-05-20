@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "412172413765",
+    "firebase_url": "https://project-3819783536820009099.firebaseio.com",
+    "project_id": "project-3819783536820009099",
+    "storage_bucket": "project-3819783536820009099.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412172413765:android:2585e58512567550",
+        "android_client_info": {
+          "package_name": "com.hlyue.totpauthenticator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412172413765-5894af6235u2elo2a1f6ot080e1ug2v8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hlyue.totpauthenticator",
+            "certificate_hash": "2E8E8842B8E8D4F861CAE9FF150209DFB7C4FC33"
+          }
+        },
+        {
+          "client_id": "412172413765-7vu96g6msdocav6lo3gkc15npirdf4me.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu3rQDHIRZDwzR2NfLk2CVPklwYdQW9VY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412172413765-7vu96g6msdocav6lo3gkc15npirdf4me.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
