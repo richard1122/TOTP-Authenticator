@@ -6,7 +6,15 @@
 /build
 /captures
 local.gradle
+.idea/libraries/
 .idea/workspace.xml
 .idea/tasks.xml
-.idea/datasources.xml
-.idea/dataSources.ids
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+*.iml
