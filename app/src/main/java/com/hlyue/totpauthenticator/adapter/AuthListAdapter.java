@@ -48,13 +48,10 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
         holder.issuer.setText(authInstance.getIssuer());
         holder.timer.setText(String.format(Locale.US, "%06d", AuthUtils.calculateTOTP(authInstance)));
         holder.path.setText(authInstance.getPath());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager manager = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                manager.setPrimaryClip(ClipData.newPlainText("totp", holder.timer.getText()));
-                Toast.makeText(v.getContext(), "two factor authentication code copied", Toast.LENGTH_SHORT).show();
-            }
+        holder.itemView.setOnClickListener(v -> {
+            ClipboardManager manager = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            manager.setPrimaryClip(ClipData.newPlainText("totp", holder.timer.getText()));
+            Toast.makeText(v.getContext(), "two factor authentication code copied", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -77,7 +74,7 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
     static class AuthItemVH extends RecyclerView.ViewHolder {
         TextView issuer, timer, path;
 
-        public AuthItemVH(View itemView) {
+        AuthItemVH(View itemView) {
             super(itemView);
             this.issuer = (TextView) itemView.findViewById(R.id.auth_item_issuer);
             this.timer = (TextView) itemView.findViewById(R.id.auth_item_timer);
