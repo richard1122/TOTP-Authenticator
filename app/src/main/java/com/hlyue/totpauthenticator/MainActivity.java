@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.hlyue.totpauthenticator.adapter.AuthListAdapter;
 import com.hlyue.totpauthenticator.models.AuthUtils;
 import com.hlyue.totpauthenticator.zxing.IntentIntegrator;
@@ -23,11 +26,13 @@ import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getName();
+    private final static int REQUEST_FIREBASE_SIGNIN = 0x33;
     private final Handler mHandler = new Handler();
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
     private AuthListAdapter mAdapter;
     private Runnable mRunnable;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 mHandler.postDelayed(this, 250);
             }
         }, 250);
+        mAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -67,8 +74,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+        if (mAuth.getCurrentUser() != null)
+            Log.d(TAG, "current user: " + mAuth.getCurrentUser().getEmail());
+        else {
+            Log.w(TAG, "no current user");
+            startActivityForResult(
+                    AuthUI.getInstance(FirebaseApp.getInstance()).createSignInIntentBuilder().setProviders(AuthUI.GOOGLE_PROVIDER).build(),
+                    REQUEST_FIREBASE_SIGNIN);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -90,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "2 factor auth parse failed", Toast.LENGTH_LONG).show();
             }
         }
+        if (requestCode == REQUEST_FIREBASE_SIGNIN) {
+            Log.d(TAG, "fireui signin response: " + resultCode);
+        }
     }
 
     @Override
@@ -110,5 +138,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
