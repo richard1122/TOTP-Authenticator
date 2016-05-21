@@ -81,8 +81,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() != null)
+        if (mAuth.getCurrentUser() != null) {
             Log.d(TAG, "current user: " + mAuth.getCurrentUser().getEmail());
+            Toast.makeText(this, "Current user: " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+        }
         else {
             Log.w(TAG, "no current user");
             startActivityForResult(
