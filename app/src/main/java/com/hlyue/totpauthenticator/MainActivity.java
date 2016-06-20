@@ -1,6 +1,5 @@
 package com.hlyue.totpauthenticator;
 
-import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +15,10 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.hlyue.totpauthenticator.adapter.AuthListAdapter;
+import com.hlyue.totpauthenticator.models.AuthInstance;
 import com.hlyue.totpauthenticator.models.AuthUtils;
 import com.hlyue.totpauthenticator.zxing.IntentIntegrator;
 import com.hlyue.totpauthenticator.zxing.IntentResult;
@@ -26,13 +28,15 @@ import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getName();
-    private final static int REQUEST_FIREBASE_SIGNIN = 0x33;
     private final Handler mHandler = new Handler();
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
     private AuthListAdapter mAdapter;
     private Runnable mRunnable;
     private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
+    private DatabaseReference mTotpDataReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 250);
         mAuth = FirebaseAuth.getInstance();
-
     }
 
     @Override
@@ -76,21 +79,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mAuth.getCurrentUser() != null) {
+            Log.d(TAG, "current user: " + mAuth.getCurrentUser().getEmail());
+            mDatabase = FirebaseDatabase.getInstance();
+            mReference = mDatabase.getReference();
+            //noinspection ConstantConditions
+            mReference.child(mAuth.getCurrentUser().getUid()).child("user").setValue(FirebaseUserUtils.toMap(mAuth.getCurrentUser()));
+            mTotpDataReference = mReference.child(mAuth.getCurrentUser().getUid()).child("totp");
+            mAdapter.init(mTotpDataReference);
+            Toast.makeText(this, "Current user: " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+        } else {
+            Log.w(TAG, "no current user");
+            startActivity(AuthUI.getInstance(FirebaseApp.getInstance()).createSignInIntentBuilder().setProviders(AuthUI.GOOGLE_PROVIDER).build());
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() != null) {
-            Log.d(TAG, "current user: " + mAuth.getCurrentUser().getEmail());
-            Toast.makeText(this, "Current user: " + mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Log.w(TAG, "no current user");
-            startActivityForResult(
-                    AuthUI.getInstance(FirebaseApp.getInstance()).createSignInIntentBuilder().setProviders(AuthUI.GOOGLE_PROVIDER).build(),
-                    REQUEST_FIREBASE_SIGNIN);
-        }
     }
 
     @Override
@@ -110,15 +116,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Not a vaild 2 factor auth register barcode", Toast.LENGTH_LONG).show();
                     return;
                 }
-                AuthUtils.newInstance(uri);
-                new BackupManager(this).dataChanged();
+                final AuthInstance authInstance = AuthInstance.getInstance(uri);
+                mTotpDataReference.push().setValue(authInstance.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "2 factor auth parse failed", Toast.LENGTH_LONG).show();
             }
-        }
-        if (requestCode == REQUEST_FIREBASE_SIGNIN) {
-            Log.d(TAG, "fireui signin response: " + resultCode);
         }
     }
 

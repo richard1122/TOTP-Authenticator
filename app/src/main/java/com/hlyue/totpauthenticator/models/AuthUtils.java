@@ -17,21 +17,12 @@ import javax.crypto.spec.SecretKeySpec;
 public class AuthUtils {
     private static final String HMAC_ALGO = "HmacSHA1";
 
-    public static void newInstance(URI url) {
-        String path = url.getPath();
-        Map<String, String> query = parseQuery(url.getQuery());
-        String issuer = query.get("issuer");
-        String secret = query.get("secret");
-        AuthInstance authInstance = AuthInstance.getInstance(path, issuer, secret);
-        MyApplication.getTotpPreference().edit().putBoolean(authInstance.encodeToString(), true).apply();
-    }
-
     public static long getPendingMS() {
         return System.currentTimeMillis() % (30 * 1000);
     }
 
     public static int calculateTOTP(AuthInstance instance) {
-        byte[] secretBytes = BaseEncoding.base32().decode(instance.getSecret().toUpperCase());
+        byte[] secretBytes = BaseEncoding.base32().decode(instance.secret.toUpperCase());
         long time = (System.currentTimeMillis() / 1000 / 30);
         byte[] timeBytes = ByteBuffer.allocate(8).putLong(time).array();
         SecretKeySpec signKey = new SecretKeySpec(secretBytes, HMAC_ALGO);
@@ -50,8 +41,7 @@ public class AuthUtils {
         return -1;
     }
 
-
-    private static Map<String, String> parseQuery(String query) {
+    static Map<String, String> parseQuery(String query) {
         return Splitter.on('&').trimResults().withKeyValueSeparator('=').split(query);
     }
 }

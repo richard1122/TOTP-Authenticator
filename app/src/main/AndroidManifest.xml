@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hlyue.totpauthenticator" >
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:allowBackup="true"
-        android:fullBackupContent="@xml/fullbackup"
+        android:allowBackup="false"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"

@@ -11,6 +11,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.Lists;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.hlyue.totpauthenticator.MyApplication;
 import com.hlyue.totpauthenticator.R;
 import com.hlyue.totpauthenticator.models.AuthInstance;
@@ -21,20 +28,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
-public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthItemVH> implements Closeable, SharedPreferences.OnSharedPreferenceChangeListener {
-    private final List<AuthInstance> mList = new ArrayList<>();
+public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthItemVH> implements Closeable, ValueEventListener {
+    private List<AuthInstance> mList;
+    private DatabaseReference mReference;
 
     public AuthListAdapter() {
-        MyApplication.getTotpPreference().registerOnSharedPreferenceChangeListener(this);
-        readList();
     }
 
-    private void readList() {
-        for (String key : MyApplication.getTotpPreference().getAll().keySet()) {
-            mList.add(AuthInstance.getInstance(key));
-        }
-        notifyDataSetChanged();
+    public void init(final DatabaseReference reference) {
+        mReference = reference;
+        mReference.addValueEventListener(this);
     }
 
     @Override
@@ -45,9 +50,9 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
     @Override
     public void onBindViewHolder(final AuthItemVH holder, int position) {
         AuthInstance authInstance = mList.get(position);
-        holder.issuer.setText(authInstance.getIssuer());
+        holder.issuer.setText(authInstance.issuer);
         holder.timer.setText(String.format(Locale.US, "%06d", AuthUtils.calculateTOTP(authInstance)));
-        holder.path.setText(authInstance.getPath());
+        holder.path.setText(authInstance.path);
         holder.itemView.setOnClickListener(v -> {
             ClipboardManager manager = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             manager.setPrimaryClip(ClipData.newPlainText("totp", holder.timer.getText()));
@@ -57,18 +62,23 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     @Override
     public void close() throws IOException {
-        MyApplication.getTotpPreference().unregisterOnSharedPreferenceChangeListener(this);
+        mReference.removeEventListener(this);
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        mList.clear();
-        readList();
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        mList = dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {}).stream().map(AuthInstance::getInstance).collect(Collectors.toList());
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
     }
 
     static class AuthItemVH extends RecyclerView.ViewHolder {
