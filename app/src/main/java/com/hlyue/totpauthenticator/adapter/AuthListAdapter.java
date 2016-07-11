@@ -67,12 +67,12 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
 
     @Override
     public void close() throws IOException {
-        mReference.removeEventListener(this);
+        if (mReference != null) mReference.removeEventListener(this);
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        mList = dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {}).stream().map(AuthInstance::getInstance).collect(Collectors.toList());
+        mList = Lists.transform(dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {}), AuthInstance::getInstance);
         notifyDataSetChanged();
     }
 
