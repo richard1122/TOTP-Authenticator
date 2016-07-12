@@ -4,12 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.google.common.base.Joiner;
 import com.google.common.io.BaseEncoding;
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 public class AuthInstance {

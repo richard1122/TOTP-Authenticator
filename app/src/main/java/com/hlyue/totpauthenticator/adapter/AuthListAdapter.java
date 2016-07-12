@@ -3,7 +3,6 @@ package com.hlyue.totpauthenticator.adapter;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,20 +14,16 @@ import com.google.common.collect.Lists;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.hlyue.totpauthenticator.MyApplication;
 import com.hlyue.totpauthenticator.R;
 import com.hlyue.totpauthenticator.models.AuthInstance;
 import com.hlyue.totpauthenticator.models.AuthUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthItemVH> implements Closeable, ValueEventListener {
     private List<AuthInstance> mList;
@@ -72,7 +67,8 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        mList = Lists.transform(dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {}), AuthInstance::getInstance);
+        mList = Lists.transform(dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {
+        }), AuthInstance::getInstance);
         notifyDataSetChanged();
     }
 

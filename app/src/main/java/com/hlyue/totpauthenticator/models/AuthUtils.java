@@ -2,9 +2,7 @@ package com.hlyue.totpauthenticator.models;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.BaseEncoding;
-import com.hlyue.totpauthenticator.MyApplication;
 
-import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.InvalidKeyException;

@@ -1,7 +1,6 @@
 package com.hlyue.totpauthenticator;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 
 import com.google.firebase.database.FirebaseDatabase;
 

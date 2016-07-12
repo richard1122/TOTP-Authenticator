@@ -1,7 +1,5 @@
 package com.hlyue.totpauthenticator;
 
-import android.util.Pair;
-
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashMap;
