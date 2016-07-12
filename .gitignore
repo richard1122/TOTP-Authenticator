@@ -1,3 +1,5 @@
+.vscode
+
 .gradle
 /local.properties
 /.idea/workspace.xml
@@ -5,16 +7,19 @@
 .DS_Store
 /build
 /captures
+.idea
+*.apk
+*.log
+signing.gradle
+storepass
+storepass.new
+tmp
 local.gradle
-.idea/libraries/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
+*/build/
+
+# .iml files excluded, for: 
+# http://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
 *.iml
+
+/VERSION
+log.txt
