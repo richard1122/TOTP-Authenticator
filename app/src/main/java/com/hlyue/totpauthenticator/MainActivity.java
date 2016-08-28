@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     return;
                 }
                 final AuthInstance authInstance = AuthInstance.getInstance(uri);
-                mTotpDataReference.push().setValue(authInstance.toString());
+                mTotpDataReference.push().setValue(authInstance.toMap());
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "2 factor auth parse failed", Toast.LENGTH_LONG).show();
