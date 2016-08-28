@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,8 +23,10 @@ import com.hlyue.totpauthenticator.models.AuthUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthItemVH> implements Closeable, ValueEventListener {
     private List<AuthInstance> mList;
@@ -67,8 +70,8 @@ public class AuthListAdapter extends RecyclerView.Adapter<AuthListAdapter.AuthIt
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        mList = Lists.transform(dataSnapshot.getValue(new GenericTypeIndicator<List<String>>() {
-        }), AuthInstance::getInstance);
+        mList = Lists.newArrayList(Collections2.transform(dataSnapshot.getValue(new GenericTypeIndicator<Map<String, Map<String, String>>>() {
+        }).values(), AuthInstance::getInstance));
         notifyDataSetChanged();
     }
 

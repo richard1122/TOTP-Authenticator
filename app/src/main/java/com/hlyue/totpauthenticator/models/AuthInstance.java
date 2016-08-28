@@ -7,6 +7,7 @@ import com.google.common.io.BaseEncoding;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AuthInstance {
@@ -28,13 +29,21 @@ public class AuthInstance {
         return authInstance;
     }
 
-    public static AuthInstance getInstance(@NonNull final String string) {
-        String[] split = string.split("_");
-        String path = new String(BaseEncoding.base64().decode(split[0]), StandardCharsets.UTF_8);
-        String issuer = new String(BaseEncoding.base64().decode(split[1]), StandardCharsets.UTF_8);
-        String secret = new String(BaseEncoding.base64().decode(split[2]), StandardCharsets.UTF_8);
+    public static AuthInstance getInstance(@NonNull final Map<String, String> map) {
+        String path = map.get("path");
+        String issuer = map.get("issuer");
+        String secret = map.get("secret");
         return getInstance(path, issuer, secret);
     }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("path", path);
+        map.put("issuer", issuer);
+        map.put("secret", secret);
+        return map;
+    }
+
 
     @Override
     public String toString() {
