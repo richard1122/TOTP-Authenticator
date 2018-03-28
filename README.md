@@ -1,19 +1,13 @@
 # TOTP-Authenticator
 
-A Time based two factor authentication code generator like Google-Authenticator.
+A Time based 2-Step Verification code generator with cloud backups. Firebase, which is a mobile and web application development platform, is used to store authentication cridentials.
 
-Sync your website key to firebase database.
+## Features
 
-* Calculate time based OTP code like Google-Authenticator
-* Multi account support
-* Scan QR code load new website configuration
-* Sync data with firebase database, recover after new installation (same google account)
-
-## Algorithm
-
-Please refer to [this](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm) for details.
-
-Like Google-Authenticator, time-counter is 30 seconds.
+* Implement standard [Time-based One-time Password Algorithem](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm)
+* Support multiple accounts.
+* Support QR code to add new sites.
+* Cloud backup using firebase and you are able to recover your authentication cridentials after the application is reinstalled.
 
 ## Security
 
